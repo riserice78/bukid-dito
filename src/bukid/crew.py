@@ -8,7 +8,6 @@ from bukid.models.models import VegetableScheduleOutput
 import json
 import streamlit as st
 from crewai.tasks.task_output import TaskOutput
-from bukid.panel_gantt_app import create_gantt_html_pane
 from langchain_anthropic import ChatAnthropic
 
 from crewai_tools import FileReadTool

@@ -1,13 +1,21 @@
+import sys
 import os
-from dotenv import load_dotenv
-load_dotenv()
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
+
 import streamlit as st
 from datetime import datetime
-from crewai.agents.agent_builder.base_agent_executor_mixin import CrewAgentExecutorMixin
 from bukid.crew import run_research, run_schedule
-from datetime import datetime
 from chart import render_gantt, render_price_table
 from bukid.models.models import VegetableScheduleOutput
+
+
+from dotenv import load_dotenv
+load_dotenv()
+
+#from crewai.agents.agent_builder.base_agent_executor_mixin import CrewAgentExecutorMixin
+
+
+
 
 # ── Page config ──────────────────────────────────────────────
 st.set_page_config(page_title="🌱 Home Gardening Assistant", page_icon="🌱")
