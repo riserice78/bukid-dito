@@ -1,0 +1,122 @@
+[
+  {
+    "vegetable": "Kangkong (Water Spinach)",
+    "vegetable_price": {
+      "jan": 45,
+      "feb": 40,
+      "mar": 42,
+      "apr": 38,
+      "may": 40,
+      "jun": 45,
+      "jul": 50,
+      "aug": 48,
+      "sep": 45,
+      "oct": 42,
+      "nov": 40,
+      "dec": 43
+    },
+    "vegetable_price_currency": "PHP",
+    "plant_start_month": 1,
+    "plant_end_month": 12,
+    "harvest_start_month": 2,
+    "harvest_end_month": 12,
+    "companion_plant": "Garlic",
+    "reason": "Kangkong absolutely loves the warm, humid tropical climate of Sta Rosa. With average temperatures of 26-28\u00b0C and humidity levels of 70-85%, this leafy green grows rapidly year-round. It's perfectly adapted to both wet and dry seasons and can even tolerate flooding during heavy rains, making it ideal for the area's weather patterns."
+  },
+  {
+    "vegetable": "Okra (Lady's Finger)",
+    "vegetable_price": {
+      "jan": 55,
+      "feb": 50,
+      "mar": 48,
+      "apr": 45,
+      "may": 50,
+      "jun": 55,
+      "jul": 60,
+      "aug": 58,
+      "sep": 55,
+      "oct": 52,
+      "nov": 50,
+      "dec": 53
+    },
+    "vegetable_price_currency": "PHP",
+    "plant_start_month": 2,
+    "plant_end_month": 7,
+    "harvest_start_month": 4,
+    "harvest_end_month": 11,
+    "companion_plant": "Basil",
+    "reason": "Okra thrives exceptionally well in hot, humid conditions which perfectly matches Sta Rosa's tropical climate. The consistent warmth of 26-28\u00b0C and high humidity levels of 70-85% create ideal growing conditions, allowing for almost year-round production. Okra is also quite resistant to common pests in the region."
+  },
+  {
+    "vegetable": "Eggplant (Talong)",
+    "vegetable_price": {
+      "jan": 60,
+      "feb": 55,
+      "mar": 50,
+      "apr": 48,
+      "may": 52,
+      "jun": 58,
+      "jul": 65,
+      "aug": 62,
+      "sep": 58,
+      "oct": 55,
+      "nov": 52,
+      "dec": 58
+    },
+    "vegetable_price_currency": "PHP",
+    "plant_start_month": 12,
+    "plant_end_month": 7,
+    "harvest_start_month": 3,
+    "harvest_end_month": 11,
+    "companion_plant": "Marigold",
+    "reason": "Eggplant is perfectly suited to Sta Rosa's tropical climate, thriving in the warm temperatures of 26-28\u00b0C and high humidity of 70-85%. These conditions promote vigorous growth and consistent fruit production during both wet and dry seasons. The stable warm temperatures prevent stress and ensure continuous flowering and fruiting."
+  },
+  {
+    "vegetable": "String Beans (Sitaw)",
+    "vegetable_price": {
+      "jan": 70,
+      "feb": 65,
+      "mar": 60,
+      "apr": 58,
+      "may": 62,
+      "jun": 68,
+      "jul": 75,
+      "aug": 72,
+      "sep": 68,
+      "oct": 65,
+      "nov": 62,
+      "dec": 65
+    },
+    "vegetable_price_currency": "PHP",
+    "plant_start_month": 10,
+    "plant_end_month": 5,
+    "harvest_start_month": 12,
+    "harvest_end_month": 8,
+    "companion_plant": "Radish",
+    "reason": "String beans excel in Sta Rosa's climate, especially being heat-tolerant while benefiting from the region's 70-85% humidity levels which aid in optimal pod development. The warm temperatures of 26-28\u00b0C support vigorous vine growth and flowering. String beans perform particularly well during the cooler months while remaining productive during warmer periods."
+  },
+  {
+    "vegetable": "Sweet Potato Leaves (Camote Tops)",
+    "vegetable_price": {
+      "jan": 35,
+      "feb": 30,
+      "mar": 32,
+      "apr": 28,
+      "may": 30,
+      "jun": 35,
+      "jul": 40,
+      "aug": 38,
+      "sep": 35,
+      "oct": 32,
+      "nov": 30,
+      "dec": 33
+    },
+    "vegetable_price_currency": "PHP",
+    "plant_start_month": 1,
+    "plant_end_month": 12,
+    "harvest_start_month": 2,
+    "harvest_end_month": 12,
+    "companion_plant": "Lemongrass",
+    "reason": "Sweet potato leaves grow vigorously in Sta Rosa's warm, humid environment. The temperatures of 26-28\u00b0C combined with 70-85% humidity create perfect conditions for rapid vine growth and continuous leaf production. The plant is highly adaptable to various moisture levels and produces nutritious leaves continuously while tubers develop underground, making it extremely productive in this tropical setting."
+  }
+]

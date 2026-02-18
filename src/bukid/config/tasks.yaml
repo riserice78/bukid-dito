@@ -1,0 +1,80 @@
+weather_research_task:
+  description: >
+    Retrieve the  monthly average temperature and monthly average humidity in {location} for the year {previous_year}
+  expected_output: >
+    In bullet format, temperature in celsius, and the humidity range in {location}
+  agent: weather_historian
+
+plant_finder_task:
+  description: >
+    Using the temperature and humidity information from the previous task, 
+    recommend 3 vegetables that would thrive in home gardens in {location}.
+    Once approved, your task is COMPLETE.
+  expected_output: >
+    A list of 3 vegetables with short reason for why they are recommended, validated with human confirmation.
+  agent: plant_finder
+  context:
+    - weather_research_task
+
+#plant_list_validation_task:
+#  description: >
+#    Review the output from the previous task. Ask the human: "Are you satisfied with these results? (yes/no)"
+#    If human says no, ask what needs improvement and iterate.
+#  agent: plant_finder
+#  expected_output: >
+#    Human satisfaction confirmation
+#  dependencies: plant_finder_task
+
+plant_researcher_task:
+  description: >
+    Create a detailed planting and harvesting schedule for the following vegetables: {vegetables}.
+    The garden is located in {location}.
+
+    For each vegetable provide:
+    - The planting window (start and end month as numbers 1-12)
+    - The harvesting window (start and end month as numbers 1-12)
+    - Current market price and its currency
+    - A companion plant with the reason for pairing
+    - Why the vegetable thrives in {location}
+
+    Also include overall notes about the schedule and a timestamp.
+  expected_output: >
+    A structured planting and harvesting schedule for all vegetables,
+    including market prices, companion plants, and reasons for each choice.
+  agent: plant_researcher
+#  context: [weather_research_task, plant_finder_task]
+#  dependencies: [weather_research_task, plant_finder_task]
+
+market_researcher_task:
+  description: >
+    Using the vegetables provided by the plant_researcher, for each month, calculate the average price of the vegetable in {location} for the year {previous_year}.
+  expected_output: >
+    For each vegetable, write its average price for each month of the year. Make sure to specify the currency and be consistent with the currency used. As much as possible, use the local currency.
+  agent: market_researcher
+  context:
+    - plant_researcher_task
+
+reporter_task:
+  description: >
+    Using the plant_researcher_task from the previous task, 
+    Create a comprehensive vegetable planting and harvesting schedule.
+    For each vegetable, report:
+    - Why it would thrive in {location}
+    - What companion plant can be used to deter pests and the reason for the use
+    - When to start planting (month number 1-12)
+    - When to stop planting (month number 1-12)
+    - When harvesting begins (month number 1-12)
+    - When harvesting ends (month number 1-12)
+    - The average price per kilo of the vegetable for different months
+    - The currency used in the price of the vegetable
+
+  expected_output: >
+    A structured JSON object containing:
+      - vegetable_schedule: array of vegetable schedules and market prices
+      - generated_by: name of the agent
+      - timestamp: current date
+      - notes: helpful information about the schedules
+  agent: reporter
+  context:
+    - plant_researcher_task
+    - market_researcher_task

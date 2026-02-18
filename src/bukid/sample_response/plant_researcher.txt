@@ -1,0 +1,96 @@
+Agent: Plant Researcher                                                                                               │
+│                                                                                                                        │
+│  Final Answer:                                                                                                         │
+│  Based on the temperature and humidity data for Calamba, Laguna, here are the top 5 vegetables that would thrive in    │
+│  home gardens, along with their planting schedules and companion plants:                                               │
+│                                                                                                                        │
+│  ## Top 5 Vegetables for Calamba, Laguna Home Gardens                                                                  │
+│                                                                                                                        │
+│  ### 1. **Kangkong (Water Spinach)**                                                                                   │
+│                                                                                                                        │
+│  **Why it would thrive in Calamba, Laguna:**                                                                           │
+│  Kangkong thrives in the consistently warm temperatures (26-30°C) and high humidity (73-87%) of Calamba. This          │
+│  tropical leafy vegetable loves moist conditions and warm weather year-round, making it perfectly suited to the local  │
+│  climate.                                                                                                              │
+│                                                                                                                        │
+│  **Planting Schedule:**                                                                                                │
+│  - Month to start planting: January                                                                                    │
+│  - Month to stop planting: November                                                                                    │
+│  - Month when harvesting begins: February                                                                              │
+│  - Month when harvesting ends: December                                                                                │
+│                                                                                                                        │
+│  **Companion Plant:** Marigolds                                                                                        │
+│  **Reason for use:** Marigolds deter aphids, whiteflies, and other soft-bodied insects that commonly attack kangkong.  │
+│  The strong scent confuses and repels these pests while attracting beneficial insects.                                 │
+│                                                                                                                        │
+│  ### 2. **Tomatoes**                                                                                                   │
+│                                                                                                                        │
+│  **Why it would thrive in Calamba, Laguna:**                                                                           │
+│  Tomatoes grow well in the warm temperatures of Calamba, especially during the cooler months (January-March and        │
+│  November-December). The moderate humidity levels during the dry season provide ideal conditions for fruit             │
+│  development and reduce fungal diseases.                                                                               │
+│                                                                                                                        │
+│  **Planting Schedule:**                                                                                                │
+│  - Month to start planting: November                                                                                   │
+│  - Month to stop planting: February                                                                                    │
+│  - Month when harvesting begins: February                                                                              │
+│  - Month when harvesting ends: June                                                                                    │
+│                                                                                                                        │
+│  **Companion Plant:** Basil                                                                                            │
+│  **Reason for use:** Basil repels tomato hornworms, aphids, and whiteflies while improving the flavor of tomatoes.     │
+│  The aromatic compounds in basil act as a natural pesticide and mask the scent that attracts harmful insects.          │
+│                                                                                                                        │
+│  ### 3. **Eggplant (Talong)**                                                                                          │
+│                                                                                                                        │
+│  **Why it would thrive in Calamba, Laguna:**                                                                           │
+│  Eggplant is heat-loving and thrives in Calamba's consistently warm temperatures throughout the year. The plant        │
+│  tolerates high humidity well and produces continuously in tropical conditions, making it ideal for year-round         │
+│  cultivation.                                                                                                          │
+│                                                                                                                        │
+│  **Planting Schedule:**                                                                                                │
+│  - Month to start planting: January                                                                                    │
+│  - Month to stop planting: October                                                                                     │
+│  - Month when harvesting begins: April                                                                                 │
+│  - Month when harvesting ends: January (following year)                                                                │
+│                                                                                                                        │
+│  **Companion Plant:** Hot Peppers (Sili)                                                                               │
+│  **Reason for use:** Hot peppers contain capsaicin, which naturally deters aphids, spider mites, and flea beetles      │
+│  that commonly attack eggplants. The peppers also attract beneficial predatory insects.                                │
+│                                                                                                                        │
+│  ### 4. **Okra (Ladies' Finger)**                                                                                      │
+│                                                                                                                        │
+│  **Why it would thrive in Calamba, Laguna:**                                                                           │
+│  Okra is extremely heat-tolerant and actually prefers the warm, humid conditions found in Calamba year-round. The      │
+│  plant thrives in temperatures above 26°C and can handle high humidity levels, making it perfect for the local         │
+│  climate.                                                                                                              │
+│                                                                                                                        │
+│  **Planting Schedule:**                                                                                                │
+│  - Month to start planting: February                                                                                   │
+│  - Month to stop planting: September                                                                                   │
+│  - Month when harvesting begins: May                                                                                   │
+│  - Month when harvesting ends: December                                                                                │
+│                                                                                                                        │
+│  **Companion Plant:** Nasturtiums                                                                                      │
+│  **Reason for use:** Nasturtiums act as trap crops, attracting aphids, cucumber beetles, and squash bugs away from     │
+│  okra plants. They also repel ants and improve soil health through their root system.                                  │
+│                                                                                                                        │
+│  ### 5. **String Beans (Sitaw)**                                                                                       │
+│                                                                                                                        │
+│  **Why it would thrive in Calamba, Laguna:**                                                                           │
+│  String beans grow well in Calamba's warm temperatures and can tolerate the varying humidity levels throughout the     │
+│  year. They prefer the slightly cooler, drier months for optimal pod development but can produce year-round with       │
+│  proper care.                                                                                                          │
+│                                                                                                                        │
+│  **Planting Schedule:**                                                                                                │
+│  - Month to start planting: January                                                                                    │
+│  - Month to stop planting: September                                                                                   │
+│  - Month when harvesting begins: March                                                                                 │
+│  - Month when harvesting ends: December                                                                                │
+│                                                                                                                        │
+│  **Companion Plant:** Catnip                                                                                           │
+│  **Reason for use:** Catnip effectively repels aphids, ants, flea beetles, and squash bugs that commonly damage bean   │
+│  plants. The nepetalactone in catnip is more effective than DEET in repelling many garden pests, and it doesn't harm   │
+│  beneficial insects when used properly.                                                                                │
+│                                                                                                                        │
+│  These vegetables take advantage of Calamba's tropical climate while the companion plants provide natural,             │
+│  sustainable pest management solutions that work harmoniously with the local ecosystem.      
