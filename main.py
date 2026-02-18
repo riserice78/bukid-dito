@@ -9,8 +9,12 @@ from chart import render_gantt, render_price_table
 from bukid.models.models import VegetableScheduleOutput
 
 
-from dotenv import load_dotenv
-load_dotenv()
+#from dotenv import load_dotenv
+#load_dotenv()
+
+# Works both locally and in production
+os.environ["MODEL"] = st.secrets.get("MODEL", "")
+os.environ["ANTHROPIC_API_KEY"] = st.secrets.get("ANTHROPIC_API_KEY", "")
 
 #from crewai.agents.agent_builder.base_agent_executor_mixin import CrewAgentExecutorMixin
 
