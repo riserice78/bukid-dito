@@ -11,8 +11,9 @@ plant_finder_task:
 
     IMPORTANT: You must respond in easy to understand {language}.
   expected_output: >
-    A list of recommended vegetables suited for {planting_medium} gardening,
-    with reasons why they are suitable for the location, season, and planting medium.
+    A structured list of exactly 3 recommended vegetables suited for {planting_medium} gardening.
+    For each vegetable include a reason why it suits the location and season.
+    If planting in pots, include a recommended pot size. Otherwise leave pot_size empty.
     Written in {language}.
   agent: plant_finder
 
@@ -33,17 +34,6 @@ plant_researcher_task:
     Written in {language}.
   agent: plant_researcher
 
-qa_task:
-  description: >
-    Answer the following gardening question from the user: {question}
-    The user's garden is located in {location} and they are planting in {planting_medium}.
-    Be friendly, concise, and practical in your answer.
-    IMPORTANT: You must respond entirely in {language}.
-  expected_output: >
-    A helpful and friendly answer to the user's gardening question.
-    Written in {language}.
-  agent: garden_assistant
-
 preparation_task:
   description: >
     Provide preparation advice for growing the following vegetables: {vegetables}
@@ -59,3 +49,14 @@ preparation_task:
     Practical and easy-to-follow preparation advice for each vegetable including food scrap
     growing tips. Written in {language}.
   agent: preparation_advisor
+
+qa_task:
+  description: >
+    Answer the following gardening question from the user: {question}
+    The user's garden is located in {location} and they are planting in {planting_medium}.
+    Be friendly, concise, and practical in your answer.
+    IMPORTANT: You must respond entirely in {language}.
+  expected_output: >
+    A helpful and friendly answer to the user's gardening question.
+    Written in {language}.
+  agent: garden_assistant

@@ -1,7 +1,7 @@
 import plotly.express as px
 import pandas as pd
 import streamlit as st
-from bukid.models.models import VegetableScheduleOutput
+from bukid.models.models import VegetableScheduleOutput, VegetablePreparationOutput, VegetableResearchOutput
 from datetime import date
 
 MONTH_NAMES = {
@@ -27,7 +27,7 @@ def render_schedule_cards(output: VegetableScheduleOutput):
                 st.markdown(f"{MONTH_NAMES[v.harvest_start_month]} → {MONTH_NAMES[v.harvest_end_month]}")
 
             st.markdown(f"**🌿 Companion Plant:** {v.companion_plant}")
-            st.markdown(f"**💡 Why it thrives:** {v.reason}")
+            #st.markdown(f"**💡 Why it thrives:** {v.reason}")
 
 def render_gantt(output: VegetableScheduleOutput):
     rows = []
@@ -37,7 +37,7 @@ def render_gantt(output: VegetableScheduleOutput):
             "Task": "🌱 Plant",
             "Start": month_to_date(v.plant_start_month),
             "End": month_to_date(v.plant_end_month, 28),
-            "Notes": v.reason
+            #"Notes": v.reason
         })
         rows.append({
             "Vegetable": v.vegetable,
@@ -98,15 +98,50 @@ def render_schedule_mobile_friendly(output: VegetableScheduleOutput):
         render_gantt(output)
 
 
-def render_price_table(output: VegetableScheduleOutput):
-    """Show a summary table with market prices."""
+def render_summary_table(output: VegetableScheduleOutput):
+    """Show a summary table"""
     rows = [{
         "Vegetable": v.vegetable,
         "Plant": f"{MONTH_NAMES[v.plant_start_month]} → {MONTH_NAMES[v.plant_end_month]}",
         "Harvest": f"{MONTH_NAMES[v.harvest_start_month]} → {MONTH_NAMES[v.harvest_end_month]}",
-        "Price Range": f"{v.vegetable_price_currency} {v.vegetable_price.low} – {v.vegetable_price.high}/kg",
+        #"Price Range": f"{v.vegetable_price_currency} {v.vegetable_price.low} – {v.vegetable_price.high}/kg",
         "Companion Plant": v.companion_plant,
-        "Why it thrives": v.reason
+        #"Why it thrives": v.reason
     } for v in output.vegetable_schedule]
 
     st.dataframe(pd.DataFrame(rows), width='stretch', hide_index=True)
+
+
+def render_preparation_cards(output: VegetablePreparationOutput):
+    st.subheader("🌱 Planting Preparation Guide")
+
+    if output.notes:
+        st.info(output.notes)
+
+    for v in output.vegetable_preparation:
+        with st.expander(f"🥬 {v.vegetable}", expanded=False):
+            # Scraps row
+            if v.can_grow_from_scraps:
+                st.markdown("**♻️ Can grow from food scraps?** ✅ Yes")
+                st.markdown(f"**How:** {v.scraps_how}")
+            else:
+                st.markdown("**♻️ Can grow from food scraps?** ❌ No")
+
+            # Lead time
+            st.markdown(f"**📅 Start preparation:** {v.prep_lead_time}")
+
+            # Special tips
+            st.markdown(f"**💡 Special tips:** {v.special_tips}")
+
+
+def render_research_cards(output: VegetableResearchOutput):
+    st.subheader("🥬 Recommended Vegetables")
+
+    if output.summary:
+        st.info(output.summary)
+
+    for v in output.vegetable_recommendations:
+        with st.expander(f"🌱 {v.vegetable}", expanded=False):
+            st.markdown(f"**💡 Why it suits you:** {v.reason}")
+            if v.pot_size:
+                st.markdown(f"**🪴 Recommended pot size:** {v.pot_size}")

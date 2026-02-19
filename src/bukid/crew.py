@@ -4,7 +4,7 @@ from crewai.agents.agent_builder.base_agent import BaseAgent
 
 from typing import List
 from pathlib import Path
-from bukid.models.models import VegetableScheduleOutput
+from bukid.models.models import VegetableScheduleOutput, VegetablePreparationOutput, VegetableResearchOutput
 import json
 import streamlit as st
 from crewai.tasks.task_output import TaskOutput
@@ -72,7 +72,8 @@ class Bukid():
         print(f"In plant_finder_task")
         return Task(
             config=self.tasks_config['plant_finder_task'], # type: ignore[index],
-            callback=lambda output: print("TASK 2 plant_finder_task COMPLETED") 
+            #callback=lambda output: print("TASK 2 plant_finder_task COMPLETED"),
+            output_pydantic=VegetableResearchOutput
         )
 
     @task
@@ -86,7 +87,11 @@ class Bukid():
 
     @task
     def preparation_task(self) -> Task:
-        return Task(config=self.tasks_config["preparation_task"])
+        return Task(
+            config=self.tasks_config["preparation_task"],
+            output_pydantic=VegetablePreparationOutput
+        )
+        
 
     @task
     def qa_task(self) -> Task:
@@ -141,7 +146,7 @@ def run_research(crew_inputs: dict) -> str:
         "planting_medium": crew_inputs["planting_medium"]
     }
     result = Bukid().research_crew().kickoff(inputs)
-    return result.raw
+    return result.pydantic
 
 
 def run_schedule(crew_inputs: dict, vegetables: str) -> str:
@@ -164,7 +169,7 @@ def run_preparation(crew_inputs: dict, vegetables: str) -> str:
         "planting_medium": crew_inputs["planting_medium"]
     }
     result = Bukid().preparation_crew().kickoff(inputs=inputs)
-    return result.raw
+    return result.pydantic
 
 def run_qa(crew_inputs: dict, question: str) -> str:
     inputs = {
