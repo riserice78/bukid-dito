@@ -26,11 +26,9 @@ plant_researcher_task:
     - The planting window (start and end month as numbers 1-12)
     - The harvesting window (start and end month as numbers 1-12)
     - A companion plant with the reason for pairing
-    - Why the vegetable thrives in {location}
-
     IMPORTANT: You must respond in easy to understand {language}. Make explanations very brief.
   expected_output: >
-    A structured planting and harvesting schedule for all vegetables, companion plants, and brief reasons for each choice.
+    A structured planting and harvesting schedule for all vegetables, companion plants, and brief reasons for companion plant choice.
     Written in {language}.
   agent: plant_researcher
 
