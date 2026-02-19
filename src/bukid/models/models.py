@@ -20,6 +20,3 @@ class VegetableSchedule(BaseModel):
 class VegetableScheduleOutput(BaseModel):
     """Complete output schema for all vegetables"""
     vegetable_schedule: List[VegetableSchedule]
-    generated_by: str = Field(default="CrewAI Gardening Agent")
-    timestamp: str = Field(description="Generation timestamp")
-    notes: str = Field(description="Additional notes about the schedule")

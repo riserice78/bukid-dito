@@ -7,7 +7,7 @@ plant_finder_task:
     If planting in land, recommend vegetables suited for open ground cultivation.
     Consider the current season and climate of the region.
     Use {previous_year} agricultural data as reference.
-    Provide a clear list of 5 recommended vegetables with brief reasons for each.
+    Provide a clear list of 3 recommended vegetables with brief reasons for each.
 
     IMPORTANT: You must respond in easy to understand {language}.
   expected_output: >
@@ -18,20 +18,44 @@ plant_finder_task:
 
 plant_researcher_task:
   description: >
-    Create a detailed planting and harvesting schedule for the following vegetables: {vegetables}.
+    Create a simple planting and harvesting schedule for the following vegetables: {vegetables}.
     The garden is located in {location}.
 
     For each vegetable provide:
     - The planting window (start and end month as numbers 1-12)
     - The harvesting window (start and end month as numbers 1-12)
-    - Current market price and its currency
     - A companion plant with the reason for pairing
     - Why the vegetable thrives in {location}
 
-    Also include overall notes about the schedule and a timestamp.
-    IMPORTANT: You must respond in easy to understand {language}.
+    IMPORTANT: You must respond in easy to understand {language}. Make explanations very brief.
   expected_output: >
-    A structured planting and harvesting schedule for all vegetables,
-    including market prices, companion plants, and reasons for each choice.
+    A structured planting and harvesting schedule for all vegetables, companion plants, and brief reasons for each choice.
     Written in {language}.
   agent: plant_researcher
+
+qa_task:
+  description: >
+    Answer the following gardening question from the user: {question}
+    The user's garden is located in {location} and they are planting in {planting_medium}.
+    Be friendly, concise, and practical in your answer.
+    IMPORTANT: You must respond entirely in {language}.
+  expected_output: >
+    A helpful and friendly answer to the user's gardening question.
+    Written in {language}.
+  agent: garden_assistant
+
+preparation_task:
+  description: >
+    Provide preparation advice for growing the following vegetables: {vegetables}
+    in {location} using {planting_medium}.
+
+    Include the following for each vegetable:
+    - Whether it can be grown from food scraps and how
+    - Best time to start preparation before planting
+    - Any special tips for {planting_medium} gardening
+
+    IMPORTANT: You must respond entirely in {language}. Make everything simple and brief.
+  expected_output: >
+    Practical and easy-to-follow preparation advice for each vegetable including food scrap
+    growing tips. Written in {language}.
+  agent: preparation_advisor

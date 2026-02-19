@@ -51,7 +51,17 @@ class Bukid():
             llm=claude
             #tools=[file_read_test]
         )
-    
+
+    @agent
+    def preparation_advisor(self) -> Agent:
+        return Agent(config=self.agents_config["preparation_advisor"], verbose=False)
+
+    @agent
+    def garden_assistant(self) -> Agent:
+        return Agent(config=self.agents_config["garden_assistant"], verbose=False)
+
+
+
     
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
@@ -74,6 +84,14 @@ class Bukid():
             #callback=lambda output: print("TASK 4 plant_researcher_task COMPLETED") 
         )
 
+    @task
+    def preparation_task(self) -> Task:
+        return Task(config=self.tasks_config["preparation_task"])
+
+    @task
+    def qa_task(self) -> Task:
+        return Task(config=self.tasks_config["qa_task"])
+
 
     @crew
     def research_crew(self) -> Crew:
@@ -93,6 +111,26 @@ class Bukid():
             process=Process.sequential,
             verbose=False
         )
+
+    @crew
+    def preparation_crew(self) -> Crew:
+        return Crew(
+            agents=[self.preparation_advisor()],
+            tasks=[self.preparation_task()],
+            process=Process.sequential,
+            verbose=False
+        )
+  
+    @crew
+    def qa_crew(self) -> Crew:
+        return Crew(
+            agents=[self.garden_assistant()],
+            tasks=[self.qa_task()],
+            process=Process.sequential,
+            verbose=False
+        )
+
+
 
 
 def run_research(crew_inputs: dict) -> str:
@@ -116,3 +154,24 @@ def run_schedule(crew_inputs: dict, vegetables: str) -> str:
     }
     result = Bukid().schedule_crew().kickoff(inputs=inputs)
     return result.pydantic
+
+
+def run_preparation(crew_inputs: dict, vegetables: str) -> str:
+    inputs = {
+        "vegetables": vegetables,
+        "location": crew_inputs["location"],
+        "language": crew_inputs["language"],
+        "planting_medium": crew_inputs["planting_medium"]
+    }
+    result = Bukid().preparation_crew().kickoff(inputs=inputs)
+    return result.raw
+
+def run_qa(crew_inputs: dict, question: str) -> str:
+    inputs = {
+        "question": question,
+        "location": crew_inputs["location"],
+        "language": crew_inputs["language"],
+        "planting_medium": crew_inputs["planting_medium"]
+    }
+    result = Bukid().qa_crew().kickoff(inputs=inputs)
+    return result.raw
