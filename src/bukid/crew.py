@@ -52,14 +52,6 @@ class Bukid():
             #tools=[file_read_test]
         )
     
-    @agent
-    def reporter(self) -> Agent:
-        return Agent(
-            config=self.agents_config['reporter'], # type: ignore[index]
-            verbose=False,
-            llm=claude
-        )
-    
     
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
@@ -82,14 +74,6 @@ class Bukid():
             #callback=lambda output: print("TASK 4 plant_researcher_task COMPLETED") 
         )
 
-    @task
-    def reporter_task(self) -> Task:
-        print(f"In reporter_task")
-        return Task(
-            config=self.tasks_config['reporter_task'], # type: ignore[index],
-            #human_input=True,
-            output_pydantic=VegetableScheduleOutput
-        )
 
     @crew
     def research_crew(self) -> Crew:

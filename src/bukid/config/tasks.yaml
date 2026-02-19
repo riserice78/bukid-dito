@@ -29,31 +29,9 @@ plant_researcher_task:
     - Why the vegetable thrives in {location}
 
     Also include overall notes about the schedule and a timestamp.
+    IMPORTANT: You must respond in easy to understand {language}.
   expected_output: >
     A structured planting and harvesting schedule for all vegetables,
     including market prices, companion plants, and reasons for each choice.
+    Written in {language}.
   agent: plant_researcher
-
-reporter_task:
-  description: >
-    Using the plant_researcher_task from the previous task, 
-    Create a comprehensive vegetable planting and harvesting schedule.
-    For each vegetable, report:
-    - Why it would thrive in {location}
-    - What companion plant can be used to deter pests and the reason for the use
-    - When to start planting (month number 1-12)
-    - When to stop planting (month number 1-12)
-    - When harvesting begins (month number 1-12)
-    - When harvesting ends (month number 1-12)
-    - The average price per kilo of the vegetable for different months
-    - The currency used in the price of the vegetable
-
-  expected_output: >
-    A structured JSON object containing:
-      - vegetable_schedule: array of vegetable schedules and market prices
-      - generated_by: name of the agent
-      - timestamp: current date
-      - notes: helpful information about the schedules
-  agent: reporter
-  context:
-    - plant_researcher_task

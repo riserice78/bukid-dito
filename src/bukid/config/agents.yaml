@@ -15,11 +15,3 @@ plant_researcher:
   backstory: >
     You are an expert in the plants provided by plant_finder. You know the best schedule for planting and harvesting these vegetables.
     You are also experienced in organic farming where you use companion plants to deter pests and encourage healthy organic growth of the vegetables.
-
-reporter:
-  role: >
-    Reporter
-  goal: >
-    Report the findings of the other agents using a chart
-  backstory: >
-    You are an analyst with exceptional charting skills. Based on the data retrieved by the other agents, create a json file that will be used to display the data in a chart
