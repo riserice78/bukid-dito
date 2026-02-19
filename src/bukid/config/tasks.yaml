@@ -1,29 +1,20 @@
-weather_research_task:
-  description: >
-    Retrieve the  monthly average temperature and monthly average humidity in {location} for the year {previous_year}
-  expected_output: >
-    In bullet format, temperature in celsius, and the humidity range in {location}
-  agent: weather_historian
-
 plant_finder_task:
   description: >
-    Using the temperature and humidity information from the previous task, 
-    recommend 3 vegetables that would thrive in home gardens in {location}.
-    Once approved, your task is COMPLETE.
-  expected_output: >
-    A list of 3 vegetables with short reason for why they are recommended, validated with human confirmation.
-  agent: plant_finder
-  context:
-    - weather_research_task
+    Research and recommend the best vegetables to grow in {location}.
+    The user will be planting in {planting_medium}.
+    If planting in pots, recommend vegetables that grow well in containers
+    and suggest appropriate pot sizes for each.
+    If planting in land, recommend vegetables suited for open ground cultivation.
+    Consider the current season and climate of the region.
+    Use {previous_year} agricultural data as reference.
+    Provide a clear list of 5 recommended vegetables with brief reasons for each.
 
-#plant_list_validation_task:
-#  description: >
-#    Review the output from the previous task. Ask the human: "Are you satisfied with these results? (yes/no)"
-#    If human says no, ask what needs improvement and iterate.
-#  agent: plant_finder
-#  expected_output: >
-#    Human satisfaction confirmation
-#  dependencies: plant_finder_task
+    IMPORTANT: You must respond in easy to understand {language}.
+  expected_output: >
+    A list of recommended vegetables suited for {planting_medium} gardening,
+    with reasons why they are suitable for the location, season, and planting medium.
+    Written in {language}.
+  agent: plant_finder
 
 plant_researcher_task:
   description: >
@@ -42,17 +33,6 @@ plant_researcher_task:
     A structured planting and harvesting schedule for all vegetables,
     including market prices, companion plants, and reasons for each choice.
   agent: plant_researcher
-#  context: [weather_research_task, plant_finder_task]
-#  dependencies: [weather_research_task, plant_finder_task]
-
-market_researcher_task:
-  description: >
-    Using the vegetables provided by the plant_researcher, for each month, calculate the average price of the vegetable in {location} for the year {previous_year}.
-  expected_output: >
-    For each vegetable, write its average price for each month of the year. Make sure to specify the currency and be consistent with the currency used. As much as possible, use the local currency.
-  agent: market_researcher
-  context:
-    - plant_researcher_task
 
 reporter_task:
   description: >
@@ -77,4 +57,3 @@ reporter_task:
   agent: reporter
   context:
     - plant_researcher_task
-    - market_researcher_task

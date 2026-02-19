@@ -33,16 +33,6 @@ class Bukid():
     tasks: List[Task]
 
     @agent
-    def weather_historian(self) -> Agent:
-        #file_read_test = FileReadTool(file_path='./src/bukid/sample_response/weather_historian.txt')
-        return Agent(
-            config=self.agents_config['weather_historian'], # type: ignore[index]
-            verbose=False,
-            llm=claude
-            #tools=[file_read_test]    #SerperDevTool()
-        )
-
-    @agent
     def plant_finder(self) -> Agent:
         #file_read_test = FileReadTool(file_path='./src/bukid/sample_response/plant_finder.txt')
         return Agent(
@@ -61,16 +51,6 @@ class Bukid():
             llm=claude
             #tools=[file_read_test]
         )
-
-    @agent
-    def market_researcher(self) -> Agent:
-        #file_read_test = FileReadTool(file_path='./src/bukid/sample_response/vegetable_market_researcher.txt')
-        return Agent(
-            config=self.agents_config['market_researcher'], # type: ignore[index]
-            verbose=False,
-            llm=claude
-            #tools=[file_read_test]
-        )
     
     @agent
     def reporter(self) -> Agent:
@@ -84,21 +64,12 @@ class Bukid():
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
     # https://docs.crewai.com/concepts/tasks#overview-of-a-task
-    @task
-    def weather_research_task(self) -> Task:
-        print(f"In weather_research_task")
-        return Task(
-            config=self.tasks_config['weather_research_task'], # type: ignore[index]
-            callback=lambda output: print("TASK 1 weather_research_task COMPLETED") 
-        )
 
     @task
     def plant_finder_task(self) -> Task:
         print(f"In plant_finder_task")
         return Task(
             config=self.tasks_config['plant_finder_task'], # type: ignore[index],
-            #human_input=True,
-            #callback=plant_finder_callback
             callback=lambda output: print("TASK 2 plant_finder_task COMPLETED") 
         )
 
@@ -107,16 +78,8 @@ class Bukid():
         print(f"In plant_researcher_task")
         return Task(
             config=self.tasks_config['plant_researcher_task'], # type: ignore[index],
-            #human_input=True,
-            callback=lambda output: print("TASK 4 plant_researcher_task COMPLETED") 
-        )
-
-    @task
-    def market_researcher_task(self) -> Task:
-        print(f"In market_researcher_task")
-        return Task(
-            config=self.tasks_config['market_researcher_task'], # type: ignore[index],
-            callback=lambda output: print("TASK 5 market_researcher_task COMPLETED") 
+            output_pydantic=VegetableScheduleOutput
+            #callback=lambda output: print("TASK 4 plant_researcher_task COMPLETED") 
         )
 
     @task
@@ -131,8 +94,8 @@ class Bukid():
     @crew
     def research_crew(self) -> Crew:
         return Crew(
-            agents=[self.weather_historian(), self.plant_finder()],
-            tasks=[self.weather_research_task(),self.plant_finder_task()], 
+            agents=[self.plant_finder()],
+            tasks=[self.plant_finder_task()], 
             process=Process.sequential,
             verbose=False
         )
@@ -141,20 +104,31 @@ class Bukid():
     @crew
     def schedule_crew(self) -> Crew:
         return Crew(
-            agents=[self.plant_researcher(), self.reporter()], #self.market_researcher()
-            tasks=[self.plant_researcher_task(), self.reporter_task()], #self.market_researcher_task()
+            agents=[self.plant_researcher()], #self.reporter()
+            tasks=[self.plant_researcher_task()], # self.reporter_task()
             process=Process.sequential,
             verbose=False
         )
 
 
-def run_research(location: str, previous_year: str) -> str:
-    inputs = {"location": location, "previous_year": previous_year}
-    result = Bukid().research_crew().kickoff(inputs=inputs)
+def run_research(crew_inputs: dict) -> str:
+    inputs = {
+        "location": crew_inputs["location"],
+        "previous_year": crew_inputs["previous_year"],
+        "language": crew_inputs["language"],
+        "planting_medium": crew_inputs["planting_medium"]
+    }
+    result = Bukid().research_crew().kickoff(inputs)
     return result.raw
 
 
-def run_schedule(location: str, vegetables: str) -> str:
-    inputs = {"location": location, "vegetables": vegetables}
+def run_schedule(crew_inputs: dict, vegetables: str) -> str:
+    print(f"In run_schedule: {crew_inputs}")
+    inputs = {
+        "location": crew_inputs["location"],        # 👈 use dict access
+        "vegetables": vegetables,
+        "language": crew_inputs["language"],
+        "planting_medium": crew_inputs["planting_medium"]
+    }
     result = Bukid().schedule_crew().kickoff(inputs=inputs)
     return result.pydantic
