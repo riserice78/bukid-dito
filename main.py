@@ -86,6 +86,12 @@ def t(english: str, tagalog: str) -> str:
 
 # ── Page config ──────────────────────────────────────────────
 st.set_page_config(page_title="🌱 Home Gardening Assistant", page_icon="🌱")
+st.markdown("""
+    <style>
+    div[data-testid="stSidebarNav"] { display: none !important; }
+    section[data-testid="stSidebar"] { display: none !important; }
+    </style>
+""", unsafe_allow_html=True)
 st.title("🌱 Home Gardening Assistant")
 st.caption("Your AI-powered gardening crew!")
 
@@ -128,6 +134,13 @@ if "preparation_output" not in st.session_state:
     st.session_state.preparation_output = None
 if "research_output" not in st.session_state:
     st.session_state.research_output = None
+if "garden_design_done" not in st.session_state:
+    st.session_state.garden_design_done = False
+if "awaiting_garden_design" not in st.session_state:
+    st.session_state.awaiting_garden_design = False
+if "extra_vegetables" not in st.session_state:
+    st.session_state.extra_vegetables = []
+
 
 # ── Step 3: Display chat history ──────────────────────────────
 for message in st.session_state.messages:
@@ -145,29 +158,15 @@ for message in st.session_state.messages:
 
 
 # ── Step 4: Run Agent 1 automatically on first load ──────────
-##if not st.session_state.research_done:
-#   with st.chat_message("assistant"):
-#        with st.spinner(t("Finding the best vegetables for your area...", "Hinahanap ang pinakamainam na mga gulay para sa inyong lugar...")):
-#            result = run_research(crew_inputs)
-#        st.session_state.vegetables = result
-#        st.session_state.research_done = True
-#        follow_up = t(
-#            "\n\n---\n💬 **Are you happy with these vegetables? You can also add any vegetables you'd like to include!**",
-#            "\n\n---\n💬 **Okay na ba kayo sa mga gulay na ito? Maaari din kayong magdagdag ng mga gulay na gusto ninyo!**"
-#        )
-#        full_message = result + follow_up
-#        st.markdown(full_message)
-#        st.session_state.awaiting_feedback = True
-#    st.session_state.messages.append({"role": "assistant", "content": full_message})
-#    st.rerun()
-
 if not st.session_state.research_done:
     with st.chat_message("assistant"):
-        with st.spinner(t("Finding the best vegetables for your area...", "Hinahanap ang pinakamainam na mga gulay para sa inyong lugar...")):
+        with st.spinner(t(
+            "Finding the best vegetables for your area...",
+            "Hinahanap ang pinakamainam na mga gulay para sa inyong lugar..."
+        )):
             result = run_research(crew_inputs)
 
         st.session_state.research_output = result
-        # Keep vegetables as text for downstream crew inputs
         st.session_state.vegetables = "\n".join(
             [v.vegetable for v in result.vegetable_recommendations]
         )
@@ -211,7 +210,9 @@ if st.session_state.get("awaiting_feedback"):
             )
 
     if add_clicked and vegetable_input.strip():
-        st.session_state.vegetables += f"\n\nAdditional vegetables requested by user: {vegetable_input.strip()}"
+        new_veg = vegetable_input.strip()
+        st.session_state.vegetables += f"\n\nAdditional vegetables requested by user: {new_veg}"
+        st.session_state.extra_vegetables.append(new_veg)  # 
         msg = t(
             f"Got it! I've added **{vegetable_input.strip()}** to your list. 🌱 Any more to add, or click done to continue!",
             f"Sige! Idinagdag ko na ang **{vegetable_input.strip()}** sa inyong listahan. 🌱 May idadagdag pa ba, o pindutin ang done para magpatuloy!"
@@ -227,11 +228,48 @@ if st.session_state.get("awaiting_feedback"):
             "Mangyaring mag-type muna ng pangalan ng gulay."
         ))
 
+
     if done_clicked:
         st.session_state.awaiting_feedback = False
+        # Prompt user to design their garden before scheduling
         msg = t(
-            "Great! **Would you like me to create a planting schedule for these vegetables?**",
-            "Magaling! **Gusto ba ninyong gumawa ng iskedyul ng pagtatanim para sa mga gulay na ito?**"
+            "Great! 🌿 **Would you like to design your garden layout first?**",
+            "Magaling! 🌿 **Gusto ba ninyong mag-disenyo ng inyong hardin bago gumawa ng iskedyul?**"
+        )
+        with st.chat_message("assistant"):
+            st.markdown(msg)
+        st.session_state.messages.append({"role": "assistant", "content": msg})
+        st.session_state.awaiting_garden_design = True
+        st.rerun()
+
+    st.stop()
+
+# ── Step 4c: Offer garden designer ───────────────────────────────
+if st.session_state.get("awaiting_garden_design") and not st.session_state.get("garden_design_done"):
+    col1, col2 = st.columns(2)
+    with col1:
+        design_yes = st.button(
+            t("🌿 Yes, design my garden!", "🌿 Oo, mag-disenyo ng hardin!"),
+            use_container_width=True,
+            key="design_yes"
+        )
+    with col2:
+        design_no = st.button(
+            t("⏭ Skip, go to schedule", "⏭ Laktawan, pumunta sa iskedyul"),
+            use_container_width=True,
+            key="design_no"
+        )
+
+    if design_yes:
+        st.session_state.awaiting_garden_design = False
+        st.switch_page("pages/garden_designer_page.py")
+
+    if design_no:
+        st.session_state.awaiting_garden_design = False
+        st.session_state.garden_design_done = True
+        msg = t(
+            "No problem! **Would you like me to create a planting schedule for these vegetables?**",
+            "Okay lang! **Gusto ba ninyong gumawa ng iskedyul ng pagtatanim para sa mga gulay na ito?**"
         )
         with st.chat_message("assistant"):
             st.markdown(msg)
@@ -241,8 +279,9 @@ if st.session_state.get("awaiting_feedback"):
 
     st.stop()
 
+
 # ── Step 5: Handle user reply ─────────────────────────────────
-if st.session_state.awaiting_confirmation:
+if st.session_state.awaiting_confirmation and st.session_state.get("garden_design_done"):
     st.markdown(t(
         "**Would you like me to create a planting schedule?**",
         "**Gusto ba ninyong gumawa ng iskedyul ng pagtatanim?**"
@@ -368,8 +407,9 @@ if st.session_state.get("awaiting_preparation") and not st.session_state.prepara
 
 
 # ── Step 6: Open chat after flow is complete ──────────────────
-if st.session_state.research_done and not st.session_state.awaiting_confirmation and st.session_state.preparation_done:
- 
+if st.session_state.research_done and not st.session_state.awaiting_confirmation and (
+    st.session_state.preparation_done or st.session_state.garden_design_done
+):
     if prompt := st.chat_input(t(
         "Ask me anything about your garden...",
         "Magtanong tungkol sa inyong hardin..."

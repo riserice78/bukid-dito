@@ -38,7 +38,8 @@ preparation_task:
     in {location} using {planting_medium}.
 
     Include the following for each vegetable:
-    - Whether it can be grown from food scraps and how
+    - Whether it can be grown from food scraps (how)
+    - Whether it can be grown from seeds taken from market-bought vegetables (how)
     - Best time to start preparation before planting
     - Any special tips for {planting_medium} gardening
 
