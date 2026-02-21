@@ -115,7 +115,6 @@ def inject_styles(vegetables: list[dict]):
             color: #fdf6ec; font-weight: 500; font-size: 1rem;
         }
 
-
         </style>
     """, unsafe_allow_html=True)
 
@@ -178,7 +177,7 @@ def render_grid_as_png(garden_grid: dict, rows: int, cols: int) -> bytes:
         title_font = ImageFont.load_default()
         cell_font  = ImageFont.load_default()
 
-    draw.text((PADDING, PADDING), "🌿 My Garden Layout", fill=(253, 246, 236, 200), font=title_font)
+    draw.text((PADDING, PADDING), "🌿 My Taniman Layout", fill=(253, 246, 236, 200), font=title_font)
 
     for r in range(rows):
         for c in range(cols):
@@ -241,7 +240,7 @@ def render_grid_as_png(garden_grid: dict, rows: int, cols: int) -> bytes:
 
 # ── Page ──────────────────────────────────────────────────────────
 def garden_designer_page():
-    st.set_page_config(page_title="🌿 Garden Designer", page_icon="🌿", layout="wide")
+    st.set_page_config(page_title="🌿 Taniman Designer", page_icon="🌿", layout="wide")
 
     if not st.session_state.get("research_done"):
         st.warning("Please complete the vegetable research step first.")
@@ -273,170 +272,128 @@ def garden_designer_page():
         <p class="garden-sub">Pick a vegetable · Click a plot to plant it · Click a planted plot to clear it</p>
     """, unsafe_allow_html=True)
 
-    col_sidebar, col_garden = st.columns([1, 3], gap="large")
+    # ── 1. Grid size controls ─────────────────────────────────────
+    st.markdown("**📐 Garden Size**")
+    st.markdown(f"""
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:nowrap; margin-bottom:8px;">
+            <span style="font-size:0.78rem; color:#555; min-width:32px;">Rows</span>
+            <span style="font-size:1rem; font-weight:600; min-width:20px; text-align:center;">{rows}</span>
+            <span style="font-size:0.78rem; color:#555; margin-left:12px; min-width:52px;">Columns</span>
+            <span style="font-size:1rem; font-weight:600; min-width:20px; text-align:center;">{cols}</span>
+        </div>
+    """, unsafe_allow_html=True)
 
-    # ── Sidebar ───────────────────────────────────────────────────
-    with col_sidebar:
-        st.markdown("#### 🥬 Vegetables")
-        st.caption("Select one, then click a plot")
+    rc1, rc2, rc3, rc4 = st.columns(4)
+    with rc1:
+        if st.button("▼ Row", key="row_minus", use_container_width=True):
+            if rows > 1:
+                st.session_state.garden_grid = {
+                    k: v for k, v in st.session_state.garden_grid.items()
+                    if int(k.split("_")[0]) < rows - 1
+                }
+                st.session_state.grid_rows -= 1
+                st.rerun()
+    with rc2:
+        if st.button("▲ Row", key="row_plus", use_container_width=True):
+            if rows < 8:
+                st.session_state.grid_rows += 1
+                st.rerun()
+    with rc3:
+        if st.button("▼ Col", key="col_minus", use_container_width=True):
+            if cols > 1:
+                st.session_state.garden_grid = {
+                    k: v for k, v in st.session_state.garden_grid.items()
+                    if int(k.split("_")[1]) < cols - 1
+                }
+                st.session_state.grid_cols -= 1
+                st.rerun()
+    with rc4:
+        if st.button("▲ Col", key="col_plus", use_container_width=True):
+            if cols < 8:
+                st.session_state.grid_cols += 1
+                st.rerun()
 
-        for veg in vegetables:
+    st.divider()
+
+    # ── 2. Vegetable toolbar — horizontal buttons ─────────────────
+    st.markdown("**🥬🍅🥕 Vegetables**")
+    all_vegs = vegetables + [{"name": "__erase__", "emoji": "🧹", "color": None}]
+    veg_cols = st.columns(len(all_vegs))
+    for i, veg in enumerate(all_vegs):
+        with veg_cols[i]:
             is_selected = veg["name"] == st.session_state.selected_veg
-            prefix = "✅ " if is_selected else ""
-            if st.button(
-                f"{prefix}{veg['emoji']}  {veg['name']}",
-                key=f"sel_{veg['name']}",
-                use_container_width=True,
-                type="primary" if is_selected else "secondary",
-            ):
+            label = f"{'✅' if is_selected else ''}{veg['emoji']}"
+            if st.button(label, key=f"sel_{veg['name']}", use_container_width=True,
+                         type="primary" if is_selected else "secondary"):
                 st.session_state.selected_veg = veg["name"]
                 st.rerun()
 
-        st.markdown("<br>", unsafe_allow_html=True)
-        eraser_selected = st.session_state.selected_veg == "__erase__"
-        if st.button(
-            "✅ 🧹  Eraser" if eraser_selected else "🧹  Eraser",
-            key="eraser_btn",
-            use_container_width=True,
-            type="primary" if eraser_selected else "secondary",
-        ):
-            st.session_state.selected_veg = "__erase__"
-            st.rerun()
+    # Show selected label as caption
+    if st.session_state.selected_veg == "__erase__":
+        st.caption("🧹 Eraser — click a planted plot to clear it")
+    else:
+        sel = next((v for v in vegetables if v["name"] == st.session_state.selected_veg), None)
+        if sel:
+            st.caption(f"Selected: **{sel['emoji']} {sel['name']}**")
 
-        st.divider()
+    st.divider()
 
-        # Info panel
-        #if st.session_state.selected_veg and st.session_state.selected_veg != "__erase__":
-        #    sel = next((v for v in vegetables if v["name"] == st.session_state.selected_veg), None)
-        #    if sel and sel.get("reason"):
-        #        st.markdown(f"**💡 About {sel['name']}:**")
-        #        st.caption(sel["reason"])
-        #elif st.session_state.selected_veg == "__erase__":
-        #    st.caption("Click any planted plot to remove it.")
+    # ── 3. Garden grid — full width ───────────────────────────────
+    st.markdown(f'<p class="grid-label">Garden Bed · {rows} × {cols}</p>', unsafe_allow_html=True)
 
-        st.divider()
+    # Target only grid rows (skip size controls row + veggie toolbar row)
+    # Grid stHorizontalBlocks start at index 3 (1=size controls, 2=veggie toolbar, 3+=grid)
+    st.markdown(f"""
+        <style>
+        [data-testid="stHorizontalBlock"]{{
+            gap: 4px !important;
+            flex-wrap: nowrap !important;
+            width: 50vw;
+        }}
+        </style>
+    """, unsafe_allow_html=True)
 
-        # ── Grid size ─────────────────────────────────────────────
-        st.markdown("#### 📐 Garden Size")
-
-        st.caption("Rows")
-        rc1, rc2, rc3 = st.columns([1, 2, 1])
-        with rc1:
-            if st.button("▼", key="row_minus"):
-                if rows > 1:
-                    st.session_state.garden_grid = {
-                        k: v for k, v in st.session_state.garden_grid.items()
-                        if int(k.split("_")[0]) < rows - 1
-                    }
-                    st.session_state.grid_rows -= 1
-                    st.rerun()
-        with rc2:
-            st.markdown(f'<p class="size-display">{rows}</p>', unsafe_allow_html=True)
-        with rc3:
-            if st.button("▲", key="row_plus"):
-                if rows < 8:
-                    st.session_state.grid_rows += 1
-                    st.rerun()
-
-        st.caption("Columns")
-        cc1, cc2, cc3 = st.columns([1, 2, 1])
-        with cc1:
-            if st.button("▼", key="col_minus"):
-                if cols > 1:
-                    st.session_state.garden_grid = {
-                        k: v for k, v in st.session_state.garden_grid.items()
-                        if int(k.split("_")[1]) < cols - 1
-                    }
-                    st.session_state.grid_cols -= 1
-                    st.rerun()
-        with cc2:
-            st.markdown(f'<p class="size-display">{cols}</p>', unsafe_allow_html=True)
-        with cc3:
-            if st.button("▲", key="col_plus"):
-                if cols < 8:
-                    st.session_state.grid_cols += 1
-                    st.rerun()
-
-        st.divider()
-
-        if st.button("🗑 Clear garden", use_container_width=True):
-            st.session_state.garden_grid = {}
-            st.rerun()
-
-        planted = len(st.session_state.garden_grid)
-        total = rows * cols
-        if planted:
-            st.markdown(f'<p class="counter">🌱 {planted} of {total} plots planted</p>', unsafe_allow_html=True)
-
-
-    # ── Garden grid ───────────────────────────────────────────────
-    with col_garden:
-        st.markdown(f'''<p class="grid-label">Garden Bed · {rows} × {cols}</p>''', unsafe_allow_html=True)
-
-        # Render each row
-        for r in range(rows):
-            grid_cols = st.columns(cols, gap="small")
-            for c in range(cols):
-                cell_key = f"{r}_{c}"
-                planted_veg = st.session_state.garden_grid.get(cell_key)
-                with grid_cols[c]:
-                    if planted_veg:
-                        color = planted_veg["color"]
-                        rv, gv, bv = tuple(int(color.lstrip("#")[i:i+2], 16) for i in (0, 2, 4))
-                        short_name = planted_veg['name'].split('(')[0].strip()
-                        # Wrapper: fixed height, relative positioning
-                        st.markdown(f"""
-                            <div style="position:relative; height:80px; margin-bottom:4px;">
-                                <div style="
-                                    position:absolute; inset:0;
-                                    background: rgba({rv},{gv},{bv},0.75);
-                                    border: 2px solid {color};
-                                    border-radius: 10px;
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: center;
-                                    justify-content: center;
-                                    gap: 4px;
-                                    font-family: 'DM Sans', sans-serif;
-                                    font-size: 0.82rem;
-                                    color: rgba(255,255,255,0.95);
-                                    pointer-events: none;
-                                    z-index: 0;
-                                ">
-                                    <span style="font-size:1.4rem">{planted_veg['emoji']}</span>
-                                    <span>{short_name}</span>
-                                </div>
-                            </div>
-                        """, unsafe_allow_html=True)
-                        if st.button("✕ Remove", key=f"cell_{cell_key}", use_container_width=True):
-                            selected = st.session_state.selected_veg
-                            if selected == "__erase__" or planted_veg["name"] == selected:
-                                st.session_state.garden_grid.pop(cell_key, None)
-                            else:
-                                veg = next((v for v in vegetables if v["name"] == selected), None)
-                                if veg:
-                                    st.session_state.garden_grid[cell_key] = veg
+    for r in range(rows):
+        grid_cols = st.columns(cols, gap="small")
+        for c in range(cols):
+            cell_key = f"{r}_{c}"
+            planted_veg = st.session_state.garden_grid.get(cell_key)
+            with grid_cols[c]:
+                if planted_veg:
+                    color = planted_veg["color"]
+                    rv, gv, bv = tuple(int(color.lstrip("#")[i:i+2], 16) for i in (0, 2, 4))
+                    short_name = planted_veg['name'].split('(')[0].strip()
+                    st.markdown(f"""
+                        <style>
+                        div[data-testid="stButton"]:has(button[kind="secondary"][data-testid="baseButton-secondary"]#btn_cell_{cell_key}) button {{
+                            background: rgba({rv},{gv},{bv},0.8) !important;
+                            border: 2px solid {color} !important;
+                            color: white !important;
+                        }}
+                        </style>
+                    """, unsafe_allow_html=True)
+                    if st.button(f"{planted_veg['emoji']}\n{short_name}\n✕", key=f"cell_{cell_key}", use_container_width=True):
+                        selected = st.session_state.selected_veg
+                        if selected == "__erase__" or planted_veg["name"] == selected:
+                            st.session_state.garden_grid.pop(cell_key, None)
+                        else:
+                            veg = next((v for v in vegetables if v["name"] == selected), None)
+                            if veg:
+                                st.session_state.garden_grid[cell_key] = veg
+                        st.rerun()
+                else:
+                    if st.button(f"＋\n{r+1},{c+1}", key=f"cell_{cell_key}", use_container_width=True):
+                        selected = st.session_state.selected_veg
+                        if selected and selected != "__erase__":
+                            veg = next((v for v in vegetables if v["name"] == selected), None)
+                            if veg:
+                                st.session_state.garden_grid[cell_key] = veg
                             st.rerun()
 
-                    else:
-                        # Empty cell — plain button
-                        if st.button(f"＋\n{r+1},{c+1}", key=f"cell_{cell_key}", use_container_width=True):
-                            selected = st.session_state.selected_veg
-                            if selected and selected != "__erase__":
-                                veg = next((v for v in vegetables if v["name"] == selected), None)
-                                if veg:
-                                    st.session_state.garden_grid[cell_key] = veg
-                                st.rerun()
-
-        # Legend
-        if st.session_state.garden_grid:
-            st.markdown("<br>", unsafe_allow_html=True)
-            planted_vegs = {v["name"]: v for v in st.session_state.garden_grid.values()}
-            chips = "".join([
-                f'<span class="legend-chip" style="background:{v["color"]}cc">{v["emoji"]} {v["name"].split("(")[0].strip()}</span>'
-                for v in planted_vegs.values()
-            ])
-            st.markdown(chips, unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🗑 Clear garden", use_container_width=False):
+        st.session_state.garden_grid = {}
+        st.rerun()
 
 
     # ── Export + Continue ─────────────────────────────────────────
@@ -453,7 +410,7 @@ def garden_designer_page():
             st.download_button(
                 label="📤 Export layout as PNG",
                 data=png_bytes,
-                file_name="my-garden-layout.png",
+                file_name="my-taniman-layout.png",
                 mime="image/png",
             )
 
