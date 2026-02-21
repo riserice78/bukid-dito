@@ -38,7 +38,7 @@ st.set_page_config(page_title="Taniman", page_icon="🌱")
 #    section[data-testid="stSidebar"] { display: none !important; }
 #    </style>
 #""", unsafe_allow_html=True)
-st.title("🌱🌱🌱 Taniman 🌱🌱🌱")
+st.title("🌱 Taniman 🌱")
 st.caption("Your AI-powered gardening crew!")
 
 
