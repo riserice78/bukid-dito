@@ -4,7 +4,7 @@ from crewai.agents.agent_builder.base_agent import BaseAgent
 
 from typing import List
 from pathlib import Path
-from bukid.models.models import VegetableScheduleOutput, VegetablePreparationOutput, VegetableResearchOutput
+from bukid.models.models import VegetableScheduleOutput, VegetablePreparationOutput, VegetableResearchOutput, ReplantingOutput
 import json
 import streamlit as st
 from crewai.tasks.task_output import TaskOutput
@@ -60,7 +60,9 @@ class Bukid():
     def garden_assistant(self) -> Agent:
         return Agent(config=self.agents_config["garden_assistant"], verbose=False)
 
-
+    @agent
+    def replanting_advisor(self) -> Agent:
+        return Agent(config=self.agents_config["replanting_advisor"], verbose=False)
 
     
     # To learn more about structured task outputs,
@@ -96,6 +98,13 @@ class Bukid():
     @task
     def qa_task(self) -> Task:
         return Task(config=self.tasks_config["qa_task"])
+
+    @task
+    def replanting_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["replanting_task"],
+            output_pydantic=ReplantingOutput
+        )
 
 
     @crew
@@ -136,7 +145,14 @@ class Bukid():
         )
 
 
-
+    @crew
+    def replanting_crew(self) -> Crew:
+        return Crew(
+            agents=[self.replanting_advisor()],
+            tasks=[self.replanting_task()],
+            process=Process.sequential,
+            verbose=False
+        )
 
 def run_research(crew_inputs: dict) -> str:
     inputs = {
@@ -180,3 +196,13 @@ def run_qa(crew_inputs: dict, question: str) -> str:
     }
     result = Bukid().qa_crew().kickoff(inputs=inputs)
     return result.raw
+
+def run_replanting(crew_inputs: dict, harvested_vegetable: str) -> ReplantingOutput:
+    inputs = {
+        "harvested_vegetable": harvested_vegetable,
+        "location": crew_inputs["location"],
+        "language": crew_inputs["language"],
+        "planting_medium": crew_inputs["planting_medium"]
+    }
+    result = Bukid().replanting_crew().kickoff(inputs=inputs)
+    return result.pydantic

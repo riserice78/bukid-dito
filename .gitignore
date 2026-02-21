@@ -3,3 +3,5 @@ __pycache__/
 .DS_Store
 sample_responses/
 output/
+service_account.json
+.streamlit/secrets.toml

@@ -40,3 +40,15 @@ class VegetableRecommendation(BaseModel):
 class VegetableResearchOutput(BaseModel):
     vegetable_recommendations: List[VegetableRecommendation]
     summary: str = Field(default="", description="General summary or intro note")
+
+
+class ReplantingRecommendation(BaseModel):
+    vegetable: str = Field(..., description="Name of the recommended vegetable to plant next")
+    reason: str = Field(..., description="Why this vegetable is a good choice after the harvested one")
+    best_time_to_plant: str = Field(..., description="Best time to start planting, e.g. 'Plant immediately' or 'Wait 2 weeks'")
+    tip: str = Field(..., description="One practical tip for the next planting cycle")
+
+class ReplantingOutput(BaseModel):
+    harvested_vegetable: str = Field(..., description="The vegetable that was just harvested")
+    recommendations: List[ReplantingRecommendation]
+    soil_rest_advice: str = Field(default="", description="Whether the soil needs rest before replanting")

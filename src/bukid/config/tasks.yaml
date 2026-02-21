@@ -59,3 +59,21 @@ qa_task:
     A helpful and friendly answer to the user's gardening question.
     Written in {language}.
   agent: garden_assistant
+
+replanting_task:
+  description: >
+    The user has just harvested {harvested_vegetable} in {location} using {planting_medium}.
+    Recommend 3 vegetables to plant next based on crop rotation principles.
+
+    For each recommendation include:
+    - Why it is a good follow-up crop after {harvested_vegetable}
+    - Best time to start planting
+    - One practical tip for the next planting cycle
+
+    Also advise whether the soil needs rest before replanting.
+
+    IMPORTANT: Respond entirely in {language}. Keep everything brief and practical.
+  expected_output: >
+    3 structured replanting recommendations with reasons, timing, and tips.
+    Written in {language}.
+  agent: replanting_advisor
