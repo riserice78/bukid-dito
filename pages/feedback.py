@@ -10,16 +10,16 @@ from datetime import datetime
 
 # ── Google Sheets writer ──────────────────────────────────────────
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = st.secrets["gsheets"]["spreadsheet_id"]
 
 @st.cache_resource
 def get_sheet():
+    spreadsheet_id = st.secrets["gsheets"]["spreadsheet_id"]
     creds = Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
         scopes=SCOPES,
     )
     client = gspread.authorize(creds)
-    sheet = client.open_by_key(SPREADSHEET_ID).worksheet("feedback")
+    sheet = client.open_by_key(spreadsheet_id).worksheet("feedback")
     # Write header row if sheet is empty
     if sheet.row_count == 0 or sheet.cell(1, 1).value is None:
         sheet.append_row([
