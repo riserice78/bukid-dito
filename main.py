@@ -14,6 +14,24 @@ from chart import (
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
+
+import streamlit.components.v1 as components
+
+def inject_ga(measurement_id):
+    components.html(f"""
+        <script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){{dataLayer.push(arguments);}}
+            gtag('js', new Date());
+            gtag('config', '{measurement_id}');
+        </script>
+    """, height=0)
+
+inject_ga("G-WB15NHP8VN")  # replace with your actual ID
+
+
+
 try:
     if "MODEL" in st.secrets:
         os.environ["MODEL"] = st.secrets["MODEL"]
