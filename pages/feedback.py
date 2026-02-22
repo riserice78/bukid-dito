@@ -161,5 +161,14 @@ if submitted:
 
 # ── Back link ─────────────────────────────────────────────────────
 st.divider()
+
+st.markdown(
+    """
+Taniman is a passion project built with AI agents. If your business or organization needs a custom AI solution, I'd love to help.
+📩 tanimansabukid@gmail.com"""
+)
+
+# ── Back link ─────────────────────────────────────────────────────
+st.divider()
 if st.button(t("← Back to Taniman", "← Bumalik sa Taniman"), use_container_width=False):
     st.switch_page("main.py")
