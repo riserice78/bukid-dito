@@ -17,8 +17,10 @@ load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 import streamlit.components.v1 as components
 
+
 def inject_ga(measurement_id):
-    components.html(f"""
+    st.markdown(f"""
+        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -26,10 +28,9 @@ def inject_ga(measurement_id):
             gtag('js', new Date());
             gtag('config', '{measurement_id}');
         </script>
-    """, height=0)
-
-inject_ga("G-WB15NHP8VN")  # replace with your actual ID
-
+    """, unsafe_allow_html=True)
+st.set_page_config(page_title="Taniman", page_icon="🌱")
+inject_ga("G-WB15NHP8VN")  # ✅ call it here
 
 
 try:
@@ -49,7 +50,7 @@ def t(english: str, tagalog: str) -> str:
 
 
 # ── Page config ───────────────────────────────────────────────────
-st.set_page_config(page_title="Taniman", page_icon="🌱")
+#st.set_page_config(page_title="Taniman", page_icon="🌱")
 #st.markdown("""
 #    <style>
 #    div[data-testid="stSidebarNav"] { display: none !important; }
