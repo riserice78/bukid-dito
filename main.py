@@ -29,8 +29,6 @@ def inject_ga(measurement_id):
             gtag('config', '{measurement_id}');
         </script>
     """, unsafe_allow_html=True)
-st.set_page_config(page_title="Taniman", page_icon="🌱")
-inject_ga("G-WB15NHP8VN")  # ✅ call it here
 
 
 try:
@@ -50,13 +48,15 @@ def t(english: str, tagalog: str) -> str:
 
 
 # ── Page config ───────────────────────────────────────────────────
-#st.set_page_config(page_title="Taniman", page_icon="🌱")
 #st.markdown("""
 #    <style>
 #    div[data-testid="stSidebarNav"] { display: none !important; }
 #    section[data-testid="stSidebar"] { display: none !important; }
 #    </style>
 #""", unsafe_allow_html=True)
+st.set_page_config(page_title="Taniman", page_icon="🌱")
+inject_ga("G-WB15NHP8VN")  # ✅ call it here
+
 st.title("🌱 Taniman 🌱")
 st.caption("Your AI-powered gardening crew!")
 
