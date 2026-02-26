@@ -10,4 +10,3 @@ langchain-anthropic
 Pillow
 gspread
 google-auth
-ga4-mp
