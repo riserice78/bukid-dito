@@ -16,19 +16,39 @@ load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 
 import streamlit.components.v1 as components
+import requests
+import uuid
+import time
 
+def track_event(event_name: str, params: dict = {}):
+    try:
+        if "ga_session_id" not in st.session_state:
+            st.session_state.ga_session_id = str(int(time.time()))
 
-def inject_ga(measurement_id):
-    st.markdown(f"""
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){{dataLayer.push(arguments);}}
-            gtag('js', new Date());
-            gtag('config', '{measurement_id}');
-        </script>
-    """, unsafe_allow_html=True)
+        requests.post(
+            "https://www.google-analytics.com/mp/collect",
+            params={
+                "measurement_id": "G-WB15NHP8VN",
+                "api_secret": os.environ["GA_API_SECRET"],
+            },
+            json={
+                "client_id": st.session_state.get("client_id", str(uuid.uuid4())),
+                "events": [{"name": event_name, "params": {
+                        **params,
+                        "session_id": st.session_state.ga_session_id,
+                        "engagement_time_msec": 100,
+                    }}],
+            },
+            timeout=3
+        )
+    except Exception:
+        pass
+
+if "client_id" not in st.session_state:
+    import uuid
+    st.session_state.client_id = str(uuid.uuid4())
+    track_event("session_start")
+
 
 
 try:
@@ -55,8 +75,6 @@ def t(english: str, tagalog: str) -> str:
 #    </style>
 #""", unsafe_allow_html=True)
 st.set_page_config(page_title="Taniman", page_icon="🌱")
-inject_ga("G-WB15NHP8VN")  # ✅ call it here
-
 st.title("🌱 Taniman 🌱")
 st.caption("Your AI-powered gardening crew!")
 
@@ -74,6 +92,8 @@ if not st.session_state.location:
         if st.form_submit_button("Start"):
             if location.strip():
                 st.session_state.location = location.strip()
+                track_event("location_set", {"location": st.session_state.location})
+
                 st.rerun()
             else:
                 st.warning("Please enter your location to continue.")
@@ -94,10 +114,12 @@ if not st.session_state.language:
     with col1:
         if st.button("🇺🇸 English", use_container_width=True, key="lang_en"):
             st.session_state.language = "English"
+            track_event("language_selected", {"location": st.session_state.location, "language": "English"})
             st.rerun()
     with col2:
         if st.button("🇵🇭 Tagalog", use_container_width=True, key="lang_tl"):
             st.session_state.language = "Tagalog"
+            track_event("language_selected", {"location": st.session_state.location, "language": "Tagalog"})
             st.rerun()
     st.stop()
 
@@ -120,6 +142,7 @@ if not st.session_state.user_mode:
             use_container_width=True, key="mode_planning"
         ):
             st.session_state.user_mode = "planning"
+            track_event("mode_selected", {"location": st.session_state.location, "mode": "planning"})
             st.rerun()
     with col2:
         if st.button(
@@ -127,6 +150,7 @@ if not st.session_state.user_mode:
             use_container_width=True, key="mode_planted"
         ):
             st.session_state.user_mode = "planted"
+            track_event("mode_selected", {"location": st.session_state.location, "mode": "planted"})
             st.rerun()
     st.stop()
 
@@ -544,6 +568,7 @@ elif st.session_state.user_mode == "planted":
 
         if yes_sched:
             st.session_state.awaiting_confirmation = False
+            track_event("schedule_generated", {"location": st.session_state.location, "make_schedule": True})
             with st.chat_message("assistant"):
                 with st.spinner(t("Creating your harvest schedule...", "Ginagawa ang inyong iskedyul ng ani...")):
                     schedule = run_schedule(crew_inputs, st.session_state.vegetables)
@@ -557,6 +582,7 @@ elif st.session_state.user_mode == "planted":
             st.rerun()
 
         if no_sched:
+            track_event("schedule_generated", {"location": st.session_state.location, "make_schedule": False})
             st.session_state.awaiting_confirmation = False
             st.session_state.already_planted_flow_done = True
             st.rerun()
@@ -583,6 +609,7 @@ elif st.session_state.user_mode == "planted":
                     st.session_state.planted_dates = dates
                     st.session_state.tracker_shown = True
                     st.session_state.awaiting_tracker = False
+                    track_event("harvest_tracker", {"vegetable": st.session_state.vegetables, "location": st.session_state.location})
                     st.session_state.messages.append({"role": "assistant", "content": msg})
                     st.session_state.messages.append({"role": "assistant", "content": "__HARVEST_TRACKER__"})
                     st.rerun()
@@ -616,6 +643,7 @@ elif st.session_state.user_mode == "planted":
                         replanting = run_replanting(crew_inputs, harvested)
                     st.session_state.replanting_output = replanting
                 st.session_state.messages.append({"role": "assistant", "content": "__REPLANTING_CARDS__"})
+                track_event("replanting", {"vegetable": harvested, "location": st.session_state.location})
                 st.rerun()
 
         col1, col2 = st.columns(2)
@@ -649,6 +677,7 @@ if planning_done or planted_done:
         with st.chat_message("user"):
             st.markdown(prompt)
         with st.chat_message("assistant"):
+            track_event("chat_qa", {"location": st.session_state.location})
             with st.spinner(t("Thinking...", "Nag-iisip...")):
                 result = run_qa(crew_inputs, prompt)
             st.markdown(result)
